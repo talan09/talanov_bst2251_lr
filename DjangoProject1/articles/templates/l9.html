@@ -1,0 +1,63 @@
+<html>
+<head>
+    <title>Коллективный блог</title>
+    {% load static %}
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static '/index.css' %}">
+    <script src="{% static 'jquery.js' %}"></script>
+    <script src="{% static '/index.js' %}" defer></script>
+</head>
+<style>.hidden {display: none;}</style>
+<body>
+
+    <div class="parallax-container">
+        <div class="flex flex-row h-80 items-center">
+            <div class="icons-for-parallax flex-1 w-full relative">
+                <img class="icon-for-parallax-first" src="{% static 'file.png' %}">
+                <img class="icon-for-parallax-second" src="{% static 'file.png' %}">
+                <img class="icon-for-parallax-third" src="{% static 'file.png' %}">
+            </div>
+        </div>
+    </div>
+
+    <div class="header">
+        <div class="header-left">
+            <img class="logo" src="{% static 'img.png' %}" alt="logo">
+            <h1>Коллективный блог</h1>
+        </div>
+        <div class="header-right">
+            {% if user.is_authenticated %}
+                <span class="user-greeting">Привет, <strong>{{ user.username }}</strong>!</span>
+                <a href="{% url 'articles:create' %}" class="btn btn-success">+ Новая статья</a>
+                <a href="{% url 'registration:logout' %}" class="btn btn-danger">Выйти</a>
+            {% else %}
+                <a href="{% url 'registration:login' %}" class="btn btn-outline">Вход</a>
+                <a href="{% url 'registration:register' %}" class="btn btn-primary">Регистрация</a>
+            {% endif %}
+        </div>
+    </div>
+
+
+    <div class="archive">
+
+        <a href="/articles/create/">Создать статью</a>
+        {% for post in posts %}
+        <div class="one-post">
+            <a href="{% url 'articles:show' post.id %}">
+                <h2 class="post-title">{{ post.title }}</h2>
+            </a>
+            <p class="fold-button" data-hide="{{ post.id }}">Свернуть</p>
+            <div class="need-to-hide-{{ post.id }}">
+                <div class="article-info">
+                    <div class="article-author">{{ post.author.username }}</div>
+                    <div class="article-created-date">{{ post.created_date }}</div>
+                </div>
+                <p class="article-text">{{ post.get_excerpt }}</p>
+            </div>
+            <div class="one-post-shadow"></div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

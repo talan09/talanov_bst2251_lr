@@ -1,0 +1,74 @@
+<html>
+    <head>
+        <title>Коллективный блог</title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static '/index.css' %}">
+        <script src="{% static 'jquery.js' %}"></script>
+        <script src="{% static '/index.js' %}" defer> </script>
+    </head>
+    <style>.hidden {display: none;}</style>
+    <header style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 15px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center;">
+
+        <div style="font-size: 24px; font-weight: bold;">
+            <a href="/" style="color: white; text-decoration: none; font-family: 'Georgia', serif;">
+                Мой Блог
+            </a>
+        </div>
+
+        <nav style="display: flex; gap: 20px; align-items: center;">
+            <a href="/" style="color: white; text-decoration: none; font-size: 16px;">Главная</a>
+            <a href="{% url 'articles:archive' %}" style="color: white; text-decoration: none; font-size: 16px;">Статьи</a>
+
+
+            {% if user.is_authenticated %}
+
+                <span style="color: white; margin: 0 10px;">
+                    Привет, <strong>{{ user.username }}</strong>!
+                </span>
+                <a href="{% url 'articles:create' %}" style="background: #4CAF50; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-size: 14px;">
+                    + Новая статья
+                </a>
+                <a href="{% url 'registration:logout' %}" style="background: #f44336; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-size: 14px;">
+                    Выйти
+                </a>
+            {% else %}
+
+                <a href="{% url 'registration:login' %}" style="background: transparent; color: white; padding: 8px 15px; border: 2px solid white; border-radius: 5px; text-decoration: none; font-size: 14px;">
+                    Вход
+                </a>
+                <a href="{% url 'registration:register' %}" style="background: white; color: #667eea; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-size: 14px; font-weight: bold;">
+                    Регистрация
+                </a>
+            {% endif %}
+        </nav>
+    </div>
+</header>
+    <body>
+    <div class="header">
+
+        <img class='logo' src="{% static 'img.png' %}"/>
+
+    </div>
+
+    <div class="archive">
+        <a href = '/articles/create/'>Создать статью</a>
+        {% for post in posts %}
+            <div class="one-post">
+                <a href="{% url 'articles:show' post.id %}">
+                    <h2 class="post-title">{{ post.title }}</h2>
+                </a>
+                <p class="fold-button" data-hide="{{ post.id }}">Свернуть</p>
+                <div class="need-to-hide-{{ post.id }}">
+                    <div class="article-info">
+                        <div class="article-author">{{ post.author.username }}</div>
+                        <div class="article-created-date">{{ post.created_date }}</div>
+                    </div>
+                    <p class="article-text">{{ post.get_excerpt }}</p>
+                </div>
+                <div class="one-post-shadow"></div>
+            </div>
+        {% endfor %}
+    </div>
+    </body>
+</html>

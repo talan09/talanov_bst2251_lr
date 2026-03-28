@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ post.title }} | Коллективный блог</title>
+    {% load static %}
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'labfour.css' %}">
+</head>
+<body>
+
+    <div class="header">
+        <div class="header-left">
+            <img class="logo" src="{% static 'img.png' %}" alt="logo">
+            <h1>Коллективный блог</h1>
+        </div>
+        <div class="header-right">
+            {% if user.is_authenticated %}
+                <span class="user-greeting">Привет, <strong>{{ user.username }}</strong>!</span>
+                <a href="{% url 'articles:create' %}" class="btn btn-success">+ Новая статья</a>
+                <a href="{% url 'registration:logout' %}" class="btn btn-danger">Выйти</a>
+            {% else %}
+                <a href="{% url 'registration:login' %}" class="btn btn-outline">Вход</a>
+                <a href="{% url 'registration:register' %}" class="btn btn-primary">Регистрация</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="archive">
+        <div class="one-post">
+            <h2 class="post-title">{{ post.title }}</h2>
+            <a href="/articles" class="back-link">← Все статьи</a>
+            <div class="article-info">
+                <div class="article-author">{{ post.author.username }}</div>
+                <div class="article-created-date">{{ post.created_date }}</div>
+            </div>
+            <p class="article-text">{{ post.text }}</p>
+        </div>
+    </div>
+</body>
+</html>
