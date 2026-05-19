@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    {% load static %}
+    <script defer src="{% static '/js/jquery.js' %}"></script>
+    <script defer src="{% static '/js/fold.js' %}"></script>
+    <script defer src="{% static '/js/shadow.js' %}"></script>
+</head>
+<style>
+    .one-post-shadow {
+ position: absolute;
+ border-radius: 8px;
+ top: 0;
+ left: 0;
+ opacity: 0;
+ height: 100%;
+ width: 100%;
+ background: black ;
+ z-index: 0; /* это свойство «отодвигает» элемент на задний план */
+}
+</style>
+<body class="bg-green-600 space-y-8 px-20 py-8">
+    <div class="flex justify-between items-center">
+        <img src="{% static '/logo/logo.png' %}" class="w-64 logo" alt="Logo" />
+        <div class="flex items-center gap-6">
+            {% if user.is_authenticated %}
+                <!-- Пользователь авторизован -->
+                <span class="text-white font-semibold">{{ user.username }}</span>
+                <a href="{% url 'flatpages:articleCreate' %}" 
+                   class="bg-green-500 hover:bg-green-400 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 shadow-md">
+                    Написать статью
+                </a>
+
+            {% else %}
+                <!-- Пользователь не авторизован -->
+                <a href="{% url 'flatpages:register' %}" 
+                   class="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 shadow-md">
+                    Регистрация
+                </a>
+                <a href="{% url 'flatpages:login' %}" 
+                   class="bg-green-500 hover:bg-green-400 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 shadow-md">
+                    Вход
+                </a>
+            {% endif %}
+            <a href="{% url 'flatpages:archive' %}" class="underline cursor-pointer scroll-m-20 text-xl font-semibold tracking-tight text-white hover:text-green-200">
+                Все статьи
+            </a>
+        </div>
+    </div>
+    
+    <div class="archive space-y-8">
+        {% for post in posts %}
+        <div class="one-post bg-green-700 rounded-lg p-6 space-y-4 shadow-lg  transition-all relative ">
+            <div class="flex  justify-between items-center">
+                <h2 class="ml-4 post-title scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-4xl">
+                    <a href="{% url 'flatpages:article' article_id=post.id %}" class="hover:underline text-white">
+                        {{ post.title }}
+                    </a>
+                </h2>
+                <div>
+                    <button class="fold-button underline scroll-m-20 text-lg font-semibold tracking-tight text-gray-200" data-hide="{{post.id}}">Свернуть</button>
+                </div>
+            </div>
+            
+            <div class="need-to-hide-{{post.id}} ">
+                <div class="article-info flex justify-between items-center border-t border-b border-green-600 py-3 ">
+                    <div class="article-author scroll-m-20 text-lg font-semibold tracking-tight text-gray-200">
+                        Автор: {{ post.author.username }}
+                    </div>
+                    <div class="article-createddate scroll-m-20 text-lg font-semibold tracking-tight text-gray-200">
+                        {{ post.created_date }}
+                    </div>
+                </div>
+                
+                <p class="article-text scroll-m-20 text-lg leading-relaxed text-gray-100 ">
+                    {{ post.get_excerpt }}
+                </p>
+            </div>
+                <div class="one-post-shadow"></div>
+
+        </div>
+        {% empty %}
+        <div class="text-center text-white text-xl py-10 bg-green-700 rounded-lg">
+            Статьи не найдены
+        </div>
+        {% endfor %}
+
+    </div>
+
+</body>
+</html>

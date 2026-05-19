@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    {% load static %}
+</head>
+<body class="bg-green-600 space-y-8 px-20 py-8">
+    <div class="flex justify-between items-center">
+        <img src="{% static '/logo/logo.png' %}" class="h-64" alt="Logo" />
+        <a href="{% url 'flatpages:archive' %}" class="underline cursor-pointer scroll-m-20 text-xl font-semibold tracking-tight text-white hover:text-green-200">
+            Все статьи
+        </a>
+    </div>
+    
+    <div class="bg-green-700 rounded-lg p-8 space-y-6 shadow-lg">
+        <h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text-white">
+            {{ post.title }}
+        </h1>
+        
+        <div class="flex justify-between items-center border-t border-b border-green-600 py-4">
+            <h4 class="scroll-m-20 text-xl font-semibold tracking-tight text-gray-200">
+                Автор: {{ post.author.username }}
+            </h4>
+            <div class="scroll-m-20 text-xl font-semibold tracking-tight text-gray-200">
+                {{ post.created_date }}
+            </div>
+        </div>
+        
+        <div class="prose prose-lg prose-invert max-w-none">
+            <p class="scroll-m-20 text-xl leading-relaxed text-gray-100">
+                {{ post.text}}
+            </p>
+        </div>
+
+    </div>
+</body>
+</html>
